@@ -1,0 +1,16 @@
+{
+    "name": "upstreet-examples",
+    "description": "Examples of Upstreet SDK Bot",
+    "module": "index.js",
+    "type": "module",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "inworld": "node inworld.js"
+    },
+    "dependencies": {
+        "upstreet": "^1.13.3",
+        "@inworld/nodejs-sdk": "^1.6.0",
+        "dotenv": "^8.2.0"
+    }
+}

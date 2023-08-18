@@ -1,4 +1,5 @@
 import asyncio
+from agentmemory import create_memory, search_memory
 
 from upstreet import Agent
 
@@ -26,6 +27,8 @@ class Bot:
             if model is None:
                 continue
 
+            # memories = search_memory('memories', 'some text to search by')
+
             # answer = generate.continuation(model, stop=["\n\n"])(
             #     "Pick a number between one and ten:"
             # )
@@ -43,6 +46,7 @@ class Bot:
     def on_message(self, message):
         print("Received message:", message)
         asyncio.run(self.agent.speak("I got a message"))
+        create_memory('memories', str(message))
 
 
 if __name__ == "__main__":
