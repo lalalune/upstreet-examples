@@ -3,7 +3,6 @@ dotenv.config();
 
 import { Agent } from 'upstreet';
 
-
 if (!process.env.INWORLD_KEY) {
   throw new Error('INWORLD_KEY env variable is required');
 }
@@ -36,6 +35,7 @@ class Storage {
   }
 }
 
+const agent = new Agent();
 const storage = new Storage();
 
 const createInworldClient = async (message, speaker) => {
@@ -83,12 +83,10 @@ const handleError = (message, speaker) => {
   };
 };
 
-const agent = new Agent();
-
-async function onMessage(message) {
-  print("received message", message)
-  const { text, speaker } = message;
-  await sendMessage(text, speaker);
+async function onMessage(networkMessage) {
+  print("received message", networkMessage)
+  const { message, characterName } = networkMessage;
+  await sendMessage(message, characterName);
 }
 
 async function start() {

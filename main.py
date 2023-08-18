@@ -1,5 +1,5 @@
 import asyncio
-from agentmemory import create_memory, search_memory
+from agentmemory import create_memory, get_memories
 
 from upstreet import Agent
 
@@ -24,17 +24,6 @@ class Bot:
                 await asyncio.sleep(5)
                 continue
 
-            if model is None:
-                continue
-
-            # memories = search_memory('memories', 'some text to search by')
-
-            # answer = generate.continuation(model, stop=["\n\n"])(
-            #     "Pick a number between one and ten:"
-            # )
-            # print(answer)
-            # await self.agent.speak(answer)
-
             await asyncio.sleep(1)  # Wait for 1 second between actions
             # if the user presses ctrl c, break
             try:
@@ -45,8 +34,27 @@ class Bot:
 
     def on_message(self, message):
         print("Received message:", message)
+        speaker = message["characterName"]
+        message = message["message"]
+
         asyncio.run(self.agent.speak("I got a message"))
-        create_memory('memories', str(message))
+        create_memory(
+            "memories",
+            speaker + " :" + message,
+            {"speaker": speaker, "message": message},
+        )
+
+        memories = get_memories("memories", n_results=10)
+
+        memories = [
+            memory["speaker"] + ": " + memory["message"] + "\n" for memory in memories
+        ]
+
+        answer = generate.continuation(model, stop=["\n"])(
+            memories+["\n"+speaker+":"]
+        )
+        print(answer)
+        asyncio.run(self.agent.speak(answer))
 
 
 if __name__ == "__main__":
